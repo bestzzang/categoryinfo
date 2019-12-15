@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+++'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True    # 73. 배포시 True -> False 로 수정
+DEBUG = False    # 73. 배포시 True -> False 로 수정
 
 ALLOWED_HOSTS = ['*']    # 73. 배포 후 내 도메인으로 수
 
