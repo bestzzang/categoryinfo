@@ -1,0 +1,139 @@
+개발환경
+django 2.2.7
+www.pythonanywhere.com 배포 : beginer로 무료 계정 등록, Github 가입
+www.pythonanywhere.com MySQL 데이터베이스 이용
+aws.amazon.com 스토리지 S3 미디어 서버 장치로 이용, 무료 계정 등록
+
+
+
+1. PyCharm 프로젝트 생성
+2. PyCharm Terminal
+3. pip install Django==2.2.7 : 중요)Haystack에서 ImportError: cannot import name 'six' from 'django.utils'발생
+4. django-admin startproject config .
+5. python manage.py migrate
+6. python manage.py createsuperuser
+7. input 'ID' & 'email' & 'secret number'
+8. python manage.py startapp shop : App(shop) 생성하기
+9. .config/settings.py INSTALLED_APPS에 App(shop) 추가 :
+	INSTALLED_APPS = [
+		...
+		'shop',
+		...
+	]
+10. models.py 작성하기
+
+아래부터는 해당 화일에서 작성 시작
+
+.shop/models.py
+11. pip install pillow : 이미지 구현
+12. python manage.py makemigrations shop
+13. python manage.py migrate shop 0001
+14. .config/settings.py 에 MEDIA_ROOT 옵션 설정
+
+.config/settings.py
+15. MEDIA_ROOT 옵션 설정
+16. MEDIA_URL = '/media/'  # MEDIA_ROOT 옵션 설정 추가
+17. MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # MEDIA_ROOT 옵션 설정 추가
+18. .shop/admin.py 에서 관리자 페이지 coding 복사
+19. .shop/views.py 에서 View coding 복사
+20. .shop 폴더에 urls.py 생성
+21. .shop/urls.py 에서 url 연결 coding 복사
+22. .config/urls.py 에서 url 연결 coding 복사
+23. 프로젝트 최상위에 templates 디렉토리 생성
+24. .templates 폴더에 base.html 화일 만들고 coding 복사
+25. .cofig/settings.py 에 템플릿 검색되도록 경로 추가, TEMPLATES 변수에 있는 DIRS키의 값에 추가
+26. 템플릿 검색되도록 경로 추가
+27. .shop 폴더에 templates/shop 디렉토리 생성하고 Views에 필요한 모든 html화일들 복사
+28. localhost에서 사진 표시 하기 위해 .config/urls.py에 coding 삽입
+29. .config/urls.py static을 사용해서 MEDIA_URL에 해당하는 주소를 가진 요청에 대해서는 MEDIA_ROOT에서 찾아서 응답하도록 urlpatterns에 추가하는 구문. 이 구문은 디버그 모드가 True일 때만 동작함.
+
+30. pip install django-allauth : 소셜로그인 추가하기
+31. .config/settings.py INSTALLED_APPS에 App(allauth) 추가 :
+	INSTALLED_APPS = [
+		...
+		'django.contrib.sites',
+	        'allauth',
+	        'allauth.account',
+ 	        'allauth.socialaccount',
+#  		 'allauth.socialaccount.providers.kakao',
+#    		 'allauth.socialaccount.providers.naver',
+#  	         'allauth.socialaccount.providers.daum',
+#  	         'allauth.socialaccount.providers.google',
+#   		 'allauth.socialaccount.providers.facebook',
+#   		 'allauth.socialaccount.providers.twitter',
+	]
+32. .config/settings.py 에 allauth 설정 추가
+33. python manage.py migrate : 추가한 앱들의 데이터베이스 적용
+
+회원가입 양식에 전화번호 추가하는 forms 작성
+34. python manage.py startapp member
+35. .config/settings.py INSTALLED_APPS에 App(member) 추가 :
+	INSTALLED_APPS = [
+		...
+		'member.apps.MemberConfig',	
+ 	   	...
+	]
+36. .config/settings.py에 .member/forms.py 의 coding을 회원가입 폼으로 사용하기 위한 설정 삽입
+37. .config/settings.py에 mail send 설정 삽입
+38. .member/urls.py 생성 생성 후 coding 복사
+39. .member/views.py coding 복사
+40. .member/models.py coding 복사 : phone number를 위한 model
+41. .member/forms.py 화일 생성 후 coding 복사
+42. .member/admin.py coding 복수
+43. .member 하위에 templates/member 디렉토리 생성 후 HTML들 복사
+
+Search, getting started with Haystack & Whoosh
+44. pip install django-haystack
+45. pip install Whoosh
+46. .config/settings.py INSTALLED_APPS에 App(haystack) 추가 :
+	INSTALLED_APPS = [
+		...
+		'haystack',
+		...
+	]
+47. Search, getting started with Haystack.
+48. .cofig/settings.py Haystack를 위한 coding 삽입
+49. shop 폴더에 search_indexes.py 파일 생성 후 coding 작성
+50. .shop/templates/search 디렉토리 생성
+51. .shop/templates/search/search.html 화일 생성 후 coding 작성
+52. .shop/templates/search/indexes/shop 디렉토리 생성
+53. .shop/templates/search/indexes/shop/product_text.txt 화일 생성 후 search 조건 coding 작성
+
+미디어서버, 데이터베이스, 배포
+
+미디어 서버 등록
+54. aws.amazon.com > 스토리지 > S3 선택
+55. 버킷 만들기
+56. 버킷이름 : 적당한 이름 생성, 리전 : 아시아 태평양(서울) > 다음
+57. 옵션 변경 없이 > 다음
+58. 퍼블릭 액세스 차단(버킷 설정) : 새ACL & 임의의 ACL 체크 해제, 4개중 아래 2개 체크 > 다음
+59. 버킷만들기 클릭
+60. S3를 이용하기 위한 권한, IAM 설정하기 : 서비스 > 보안, 자격 증명 및 규정 준수 > IAM 클릭
+61. 왼쪽 메뉴 사용자 클릭 > 사용자 추가
+62. 사용자 이름 : 적당한 이름 생성, 프로그래밍 방식 액세스 체크 > 다음:권한
+63. 그릅 생성 하거나 기존 그룹에 사용자 추가 > 다음:태그
+64. 태그 추가(선택 사항) 변경 없이 > 다음:검토 > 사용자 만들기
+65. 사용자에 대한 액세스키 ID & 비밀 액세스 키 저장, .CSV다운로드 꼭 저장. (다음에 확인할 수 있는 방법이 없음)
+
+S3 연동하기
+66. pip install boto3
+67. pip install django-storages
+68. .config/settings.py INSTALLED_APPS에 App(storages) 추가 :
+	INSTALLED_APPS = [
+		...
+		'storages',
+		...
+	]
+69. .config/settings.py 에 S3 연동을 위한 설정 입력
+70. .config/asset_storage.py 화일 생성
+71. .config/urls.py 수정 삭제
+
+Pythonanywhere 배포하기
+72. 프로젝트 루트에 .gitignore 파일 생성 : 데이터베이스 파일, 비밀번호가 들어있는 화일 그리고 캐시 화일 등 업로드 하면 안되거나 굳이 필요 없는 화일들의 목록 작성
+73. .config/settings.py 수정
+74. git 에 올리기 전에 .config/settings.py 에 존재하는 비밀 번호 등 개인 정보 별도의 화일에 저장 후 ' +++ ' 처리.
+75. pip freeze > requirements.txt : 필요한 라이브러리 목록 추출. 파이참의 터미널에서 앞 명령어 실행.
+76. git init : 현재 폴더를 깃을 이용해서 관리하겠다는 명령어, 깃 초기화
+77. git add -A : 깃을 통해 관리할 파일 목록을 등록
+
+
